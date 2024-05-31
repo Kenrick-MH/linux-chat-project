@@ -1,0 +1,9 @@
+COMMANDS:
+ - help : 
+    displays a list of commands that are available for the service
+ - chat <username or userID> : 
+    opens a chat room with a user with a corresponding username or user userID
+ - make_group <list of usernames or userIDs> : 
+    creates a group containing users corresponding to the credentials
+    specified in the list
+ - 

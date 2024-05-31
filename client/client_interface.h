@@ -20,17 +20,31 @@
 #include <assert.h>
 #include <stdio.h>
 
+// CLIENT STATUSES
+#include "client_statuses.h"
+
+typedef int client_fd;
+
+typedef struct client_handle {
+    client_fd server_fd;
+    struct sockaddr_in in_addr;
+} client_handle;
+
+/*
+    Initializes a client handle with a specific internet addr (not logged in).
+*/
+client_handle* init_client(struct sockaddr_in in_addr);
+
 /*
     Logs on to the chatting service.
 
     Post-Conditions:
         - If the user-password pair is not found within the server
-        database, the user is prompted to re-enter the password
-        again.
+        database, the login is unsucessful and the function returns.
 
-    Returns 0 upon success and -1 upon error.
+    Returns the file descriptor that upon success and -1 upon error.
 */
-int login(char* username, char* password);
+client_status_t login(client_handle* handle, char* username, char* password);
 
 /*
     Chats with a specific user, specified by the username.
@@ -46,7 +60,7 @@ int login(char* username, char* password);
 
     Returns 0 on success and -1 on error.
 */
-int chat();
+client_status_t chat(client_handle* handle);
 
 /*
     Chats with a specific user, specified by a UID.
@@ -63,18 +77,33 @@ int chat();
     Returns 0 on success and -1 on error.
 */
 
-
-int chat2();
+client_status_t chat2(client_handle* handle);
 
 /*
     Creates a group 
 */
-int make_group(char* users[]);
+client_status_t make_group(client_handle* handle, char* users[]);
 
-int remove_chat(char* users[]);
+client_status_t remove_chat(client_handle* handle, char* users[]);
 
+/*
+    Displays a list of contacts for a user
+    
+    * Pre-Conditions:
+        - Clients must be already logged in to the server 
+        before calling this function.
+*/
+client_status_t view_contacts(client_handle* handle);
 
+/*
+    Displays a list of commands available to the
+    chatting app.
 
+    * Pre-Conditions:
+        - Clients must be already logged in to the server 
+        before calling this function.
+*/
+client_status_t help();
 
 
 

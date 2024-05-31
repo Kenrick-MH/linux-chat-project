@@ -11,12 +11,11 @@ int parseCommands(char* s){
     int argNo = 0;
     while (*s != '\0' && argNo < MAX_BUF_PARSE){ 
         if (*s == ' ' || *s == '\t' || *s == '\n') {++s; continue;};
-        // reached a non-whitespace character.
+        // reached a non-whitespace character, skip.
 
         args[argNo] = s;
         while (strchr(" \n\t\0", *s) == NULL) ++s;
-
-        // reached another whitespace character OR NULL
+        // reached another whitespace character OR NULL, 
         *(s++) = '\0', ++argNo;
     }
 
@@ -24,9 +23,6 @@ int parseCommands(char* s){
     eval(args);
 }
 
-/*
-
-*/
 int eval(char* args[]){
     if (strcmp(args[0], "chat") == 0){
         chat();    
@@ -34,8 +30,11 @@ int eval(char* args[]){
         make_group(args);
     } else if (strcmp(args[0], "remove") == 0){
         remove_chat(args); 
-    } else {
+    } else if (strcmp(args[0], "help") == 0) {
+        help();  
+    } 
+    else {
         fprintf(stderr, "ERROR: Command not found!\n" 
-                        "Please type \"help\"for a list of commands.\n");
+                        "Please type \"help\" for a list of commands.\n");
     }
 }
