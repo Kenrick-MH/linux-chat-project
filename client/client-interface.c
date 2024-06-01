@@ -6,7 +6,7 @@
 /*
     Helper function to display a help message
 */
-void printHelpMessage(){
+static void printHelpMessage(){
     printf(
         "                ========== LIST OF COMMANDS ==========             \n"
         " help -> displays a list of commands available for this chat window.\n"
@@ -15,9 +15,12 @@ void printHelpMessage(){
     );
 }
 
-/*
-    Helper function to make a conn
-*/
+
+// Helper function to check the password for the username over the network.
+static client_status_t checkPassword(client_fd client_fd, char* username, char* password){
+    return true;
+}
+
 
 client_status_t login(client_handle* handle, char* username, char* password){
 
@@ -34,7 +37,14 @@ client_status_t login(client_handle* handle, char* username, char* password){
 
     // Successful Connection.
     handle->server_fd = client_socket_fd;
-    return CLIENT_SUCCESS;
+
+    // Check Password.
+    client_status_t c_status;
+    if (c_status = checkPassword(client_socket_fd, username, password) == CLIENT_SUCCESS){
+        return CLIENT_SUCCESS;
+    } 
+    
+    return c_status;
 
 }
 
