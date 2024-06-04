@@ -52,7 +52,7 @@ parse_packet_t* unpack_msg(int fd){
     }
 
     packet_ptr = malloc(sizeof(pack_packet) + msg_size);
-    if (deserialize_string(fd, packet_ptr->msg) != msg_size){
+    if (deserialize_string(fd, packet_ptr->msg, msg_size) != msg_size){
         free(packet_ptr);
         return NULL;
     }
