@@ -22,6 +22,7 @@
 
 // CLIENT STATUSES
 #include "client_statuses.h"
+#include "../cli-serv-msg-parser/msg-parser.h"
 
 typedef int client_fd;
 
