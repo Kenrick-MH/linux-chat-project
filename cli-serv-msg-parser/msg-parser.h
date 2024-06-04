@@ -106,12 +106,18 @@ static void serialize_header(uint32_t packet_size, uint8_t req_code, uint8_t** s
 static void serialize_string(char* str, size_t len, uint8_t** stream);
 
 /*
+    *DESERIALIZING FUNCTIONS
+*/
+
+/*
     Deserializes a header from a file descriptor, 
-    including the HEADER_TAG.
+    after the HEADER_TAG is read.
     
     Output Invariant:
-        - If the read operation fails, or the first byte read 
-          is not a header tag, return -1.
+        - If the read operation fails or the number
+          of bytes read is different from the header size return -1.
+          The reader would then proceed until another header TAG is found.
+
         - Otherwise, msg_size and req_code will be filled with 
             the packet size and request code respectively, 
             and the function returns the number of bytes read.
@@ -129,7 +135,9 @@ static int deserialize_header(int fd, uint32_t* pack_size, uint8_t* req_code);
     
     Output Invariant:
         - If the read operation fails, or the first byte read 
-          is not a header tag, return -1.
+          is not a UINT_TAG, return -1. The reader would
+          then proceed until another HEADER_TAG is found.
+
         - Otherwise, msg_size and req_code will be filled with 
             the packet size and request code respectively, 
             and the function returns the number of bytes read.
@@ -141,17 +149,20 @@ static int deserialize_uint(int fd, uint32_t* data);
     Deserializes a string from a file descriptor.
 
     Input Invariant: 
-        - 
+        - The string, data is already dynamically allocated.
     
     Output Invariant:
         - If the read operation fails, or the first byte read 
-          is not a header tag, return -1.
+          is not a STRING_TAG, return -1. The reader would then
+          proceed until another HEADER_TAG is found. The argument
+          data would then would be deallocated.
+
         - Otherwise, msg_size and req_code will be filled with 
             the packet size and request code respectively, 
             and the function returns the number of bytes read.
 
 */
-static int deserialize_string(int fd, char buf[]);
+static int deserialize_string(int fd, char buf[], size_t len);
 
 /*
     *HELPER FUNCTIONS
