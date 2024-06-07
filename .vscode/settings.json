@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "parser_debug_utils.h": "c",
+        "msg-parser.h": "c"
+    }
+}

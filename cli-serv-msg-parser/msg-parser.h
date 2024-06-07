@@ -18,7 +18,7 @@
 #define STRING_TAG 's'
 #define UINT_TAG 'i'
 
-// OPCODES
+// REQUEST CODES
 #define LOGIN_REQUEST 0b0001
 #define LOGIN_REPLY 0b1001
 #define CHAT_TO_SERVER 0b0010

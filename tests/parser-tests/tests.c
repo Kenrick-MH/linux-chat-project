@@ -1,35 +1,15 @@
 #include "../../cli-serv-msg-parser/msg-parser.h"
 #include "parser_debug_utils.h"
 
-#define MAX_TEXT_WRAPAROUND 80
-
-void testReceivingEnd();
-void testSending();
-void integratedTest();
+void testNoArgs();
+void testStrArgs();
 
 int main(){
-
-    testReceivingEnd();
-    testSending();
-    integratedTest();
-
+    testNoArgs();
     return 0;
 }
 
-void testReceivingEnd(){
-    
+void testNoArgs(){  
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
