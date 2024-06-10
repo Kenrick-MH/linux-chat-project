@@ -3,6 +3,7 @@
 void display_packet(parse_packet_t* packet){
     if (packet == NULL) {
         printf("ERROR: NO PACKET\n");
+        return;
     }
 
     char* request_type;
@@ -30,20 +31,27 @@ void display_packet(parse_packet_t* packet){
         break;
     }
 
+    char* pack_msg = malloc(packet->msg_size+1);
+    memcpy(pack_msg, packet->msg, packet->msg_size);
+    pack_msg[packet->msg_size] = '\0';
+
     // Prints the message.
     printf(
         "==== PACKET CONTENTS ====\n"
         "Req.Type: %s\n"
         "Size  : %u\n"
-        "Src   : %u\n"
-        "Dest  : %u\n"
-        "msg_size  : %s\n"
-        "msg:\n", 
+        "Src   : %x\n"
+        "Dest  : %x\n"
+        "msg_size  : %u\n"
+        "msg:%s\n", 
             request_type,
             packet->packet_size,
             packet->src_uid,
             packet->dest_uid,
-            packet->msg_size);
+            packet->msg_size,
+            pack_msg);
+
+    free(pack_msg);
 
     return;
 }

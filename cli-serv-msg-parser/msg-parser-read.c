@@ -51,7 +51,7 @@ parse_packet_t* unpack_msg(int fd){
         return NULL;
     }
 
-    packet_ptr = malloc(sizeof(pack_packet) + msg_size);
+    packet_ptr = malloc(sizeof(parse_packet_t) + msg_size);
     if (deserialize_string(fd, packet_ptr->msg, msg_size) != msg_size){
         free(packet_ptr);
         return NULL;
@@ -67,7 +67,7 @@ parse_packet_t* unpack_msg(int fd){
 
 }
 
-static int deserialize_header(int fd, uint32_t* pack_size, uint8_t* req_code){
+int deserialize_header(int fd, uint32_t* pack_size, uint8_t* req_code){
     // Try to read header.
     uint32_t combined_field;
     if (read(fd, &combined_field, HEADER_SIZE) != HEADER_SIZE){
@@ -76,12 +76,12 @@ static int deserialize_header(int fd, uint32_t* pack_size, uint8_t* req_code){
 
     combined_field = ntohl(combined_field);
     *pack_size = combined_field & 0xfffffff;
-    *req_code = (uint8_t) combined_field >> 28;
+    *req_code = (uint8_t) (combined_field >> 28);
 
     return HEADER_SIZE;
 }
 
-static int deserialize_uint(int fd, uint32_t* data){
+int deserialize_uint(int fd, uint32_t* data){
     // Check tag
     uint8_t tag;
     if (read(fd, &tag, 1) != TAG_SIZE || tag != UINT_TAG){
@@ -97,7 +97,7 @@ static int deserialize_uint(int fd, uint32_t* data){
 
 }
 
-static int deserialize_string(int fd, char buf[], size_t len){
+int deserialize_string(int fd, char buf[], size_t len){
     // Check tag
     uint8_t tag;
     if (read(fd, &tag, 1) != TAG_SIZE || tag != STRING_TAG){

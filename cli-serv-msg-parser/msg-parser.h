@@ -1,3 +1,7 @@
+
+#ifndef MSG_PARSER_H
+#define MSG_PARSER_H
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -5,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <assert.h>
 
 // CONSTANTS
 #define ORIGIN_SERVER 1
@@ -50,7 +55,7 @@ typedef struct parse_packet {
 
     uint32_t src_uid;
     uint32_t dest_uid;
-    uint32_t msg_size;
+    uint32_t msg_size; // Includes the terminating null character.
     char msg[];
 
 } parse_packet_t;
@@ -68,7 +73,7 @@ parse_packet_t* unpack_msg(int fd);
     Packs the data contained in a packet into an encoded bytestream.
     !IMPORTANT: the returned buffer is dynamically allocated.
 */
-static uint8_t* pack_packet(parse_packet_t* data);
+uint8_t* pack_packet(parse_packet_t* data);
 
 /*
     Serializes an integer into a bytestream.
@@ -79,7 +84,7 @@ static uint8_t* pack_packet(parse_packet_t* data);
     - The serialized integer is in network byte order (big-endian)
 
 */
-static void serialize_uint(int data, uint8_t** stream);
+void serialize_uint(int data, uint8_t** stream);
 
 /*
     Serializes the header into a bytestream.
@@ -94,7 +99,7 @@ static void serialize_uint(int data, uint8_t** stream);
     - The serialized integer is in network byte order (big-endian)
 
 */
-static void serialize_header(uint32_t packet_size, uint8_t req_code, uint8_t** stream);
+void serialize_header(uint32_t packet_size, uint8_t req_code, uint8_t** stream);
 
 /*
     Serializes a string into a bytestream.
@@ -103,7 +108,7 @@ static void serialize_header(uint32_t packet_size, uint8_t req_code, uint8_t** s
     Increments the pointer to the bytestream by the length of the string,
     with STRING_TAG preceeding the data contained within the string.
 */
-static void serialize_string(char* str, size_t len, uint8_t** stream);
+void serialize_string(char* str, size_t len, uint8_t** stream);
 
 /*
     *DESERIALIZING FUNCTIONS
@@ -123,7 +128,7 @@ static void serialize_string(char* str, size_t len, uint8_t** stream);
             and the function returns the number of bytes read.
 
 */
-static int deserialize_header(int fd, uint32_t* pack_size, uint8_t* req_code);
+int deserialize_header(int fd, uint32_t* pack_size, uint8_t* req_code);
 
 /*
     Deserializes an unsigned integer from a file descriptor, 
@@ -143,7 +148,7 @@ static int deserialize_header(int fd, uint32_t* pack_size, uint8_t* req_code);
             and the function returns the number of bytes read.
 
 */
-static int deserialize_uint(int fd, uint32_t* data);
+int deserialize_uint(int fd, uint32_t* data);
 
 /*
     Deserializes a string from a file descriptor.
@@ -162,12 +167,14 @@ static int deserialize_uint(int fd, uint32_t* data);
             and the function returns the number of bytes read.
 
 */
-static int deserialize_string(int fd, char buf[], size_t len);
+int deserialize_string(int fd, char buf[], size_t len);
 
 /*
     *HELPER FUNCTIONS
 */
 /*
-    Determines the size of a packet.
+    Determines the serialized size of a packet.
 */
-static size_t calculate_pack_size(parse_packet_t* p);
+size_t serialized_pack_size(parse_packet_t* p);
+
+#endif // MSG_PARSER_H
